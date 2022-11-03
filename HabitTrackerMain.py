@@ -1,4 +1,4 @@
-import pandas as pd,numpy as np, seaborn as sns, streamlit as st,os,re, random, datetime
+import pandas as pd,numpy as np, streamlit as st,os,re, random, datetime
 from streamlit import session_state as ss
 from PIL import Image
 st.set_page_config(layout='wide',page_title='Habit & Goal Tracker')#,page_icon='icon.png')
