@@ -138,4 +138,18 @@ def GoalDashboard():
 
 def ActivityDashboard(habitdailydf):
     a=1
-    
+   
+#%% Main section
+if page == 'Setup':   
+    subpage = st.sidebar.selectbox('Select subpage',['Goals','Habits'])
+    if subpage=='Goals':
+        goaldf = DisplayNCreateTable(goaldf,goaldisptypes,'goaldf.pkl',mandatorycolname='Goal')
+        
+    elif subpage == 'Habits':
+        habitdf = DisplayNCreateTable(habitdf,habitdisptypes,'habitdf.pkl',mandatorycolname='Habit')
+        st.write(habitdf)
+            
+        if sum(habitdf['Weightage'])>100:
+            st.write('Sum of weightage exceeds 100%, hence weights will be normalized to sum up to 100% in same ratio.')
+            habitdf['Weightage'] = habitdf['Weightage']*100/sum(habitdf['Weightage'])
+            habitdf.to_pickle('habitdf.pkl')
