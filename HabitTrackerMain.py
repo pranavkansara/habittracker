@@ -1,4 +1,4 @@
-import pandas as pd, pandas_datareader as web, numpy as np, seaborn as sns, streamlit as st,os,re, random, datetime
+import pandas as pd,numpy as np, seaborn as sns, streamlit as st,os,re, random, datetime
 from streamlit import session_state as ss
 from PIL import Image
 st.set_page_config(layout='wide',page_title='Habit & Goal Tracker')#,page_icon='icon.png')
@@ -15,8 +15,6 @@ else:
     goaldf = pd.DataFrame({'Date':np.datetime64, 'Goal':'str','Category':'str','Target Unit':np.number,'Target':'str','Timeline':np.datetime64},index=[])
 # only specify non-text types below
 goaldisptypes = {'Date':'date', 'Category':['Physical','Mental','Emotional','Spiritual','Financial','Family'],'Target':'number','Timeline':'date'}
-
-st.write(goaldf)
 
 if os.path.exists('habitdf.pkl'):
     habitdf  = pd.read_pickle('habitdf.pkl')
@@ -153,3 +151,13 @@ if page == 'Setup':
             st.write('Sum of weightage exceeds 100%, hence weights will be normalized to sum up to 100% in same ratio.')
             habitdf['Weightage'] = habitdf['Weightage']*100/sum(habitdf['Weightage'])
             habitdf.to_pickle('habitdf.pkl')
+elif page == 'Daily entry':
+    DailyEntry(habitdf,habitdailydf)
+    
+
+elif page == 'Dashboard':
+    subpage = st.sidebar.selectbox('Select subpage',['Goal tracking','Activity tracking'])
+    if subpage == 'Goal tracking':
+        a=1
+    elif subpage == 'Activity tracking':
+        ActivityDashboard(habitdailydf)
