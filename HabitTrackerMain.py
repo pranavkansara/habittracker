@@ -117,16 +117,21 @@ def DailyEntry(habitdf,habitdailydf):
         st.write('---')
         st.write('**Additional comments**')
         c = st.columns(4)
-        finalvals.extend([c[0].text_input('Books read:',value=currentries['Books'].iloc[0])])
-        finalvals.extend([c[1].text_input('Articles read:',value=currentries['Articles'].iloc[0])])
-        finalvals.extend([c[2].text_input('Food:',value=currentries[v['Food']].iloc[0])])
-        finalvals.extend([c[3].text_input('Spiritual activites:',value=currentries['Spiritual'].iloc[0])])
-        finalvals.extend([c[0].text_input('Hobby related:',value=currentries['Hobby'].iloc[0])])
-        finalvals.extend([c[1].text_input('Family time:',value=currentries['Family'].iloc[0])])
-        finalvals.extend([c[2].text_input('Key Projects',value=currentries['Projects'].iloc[0])])
-        finalvals.extend([c[3].text_input('Miscellenous',value=currentries['Miscellenous'].iloc[0])])
+        def getval(field):
+            if currentries == []:
+                return ''
+            else:
+                return currentries[field].iloc[0]
+        finalvals.extend([c[0].text_input('Books read:',value=getval('Books'))])
+        finalvals.extend([c[1].text_input('Articles read:',value=getval('Articles'))])
+        finalvals.extend([c[2].text_input('Food:',value=getval('Food'))])
+        finalvals.extend([c[3].text_input('Spiritual activites:',value=getval('Spiritual'))])
+        finalvals.extend([c[0].text_input('Hobby related:',value=getval('Hobby'))])
+        finalvals.extend([c[1].text_input('Family time:',value=getval('Family'))])
+        finalvals.extend([c[2].text_input('Key Projects',value=getval('Projects'))])
+        finalvals.extend([c[3].text_input('Miscellenous',value=getval('Miscellenous'))])
         st.write('---')
-        finalvals.extend([st.text_input('Summary of the day',value=currentries['Summary'].iloc[0])])
+        finalvals.extend([st.text_input('Summary of the day',value=getval('Summary'))])
         st.write('---')
         submit = st.form_submit_button()
         if submit:
