@@ -101,11 +101,11 @@ def DailyEntry(habitdf,habitdailydf):
         st.write('**Achievement for the day**')
         c = st.columns(4)
         j=0
-        finalvals = [dt]
+        finalvals = []
         for i,v in habitdf.iterrows():
             txt = v['Habit']+': ('+ str(v['Target'])+' '+v['Target Unit']+' '+v['Frequency']+')'
             if len(currentries)>0:
-                val = currentries[v['Habit']].iloc[0]
+                val = currentries[v['Habit']]
             else:
                 val = ''
             finalvals.extend([c[(j+1)-1].text_input(txt,key='ach'+str(i),value=val)])
@@ -118,10 +118,11 @@ def DailyEntry(habitdf,habitdailydf):
         st.write('**Additional comments**')
         c = st.columns(4)
         def getval(field):
-            if currentries == []:
-                return ''
-            else:
-                return currentries[field].iloc[0]
+            try:
+                val = currentries[field]
+            except:
+                val = ''
+            return val
         finalvals.extend([c[0].text_input('Books read:',value=getval('Books'))])
         finalvals.extend([c[1].text_input('Articles read:',value=getval('Articles'))])
         finalvals.extend([c[2].text_input('Food:',value=getval('Food'))])
@@ -136,10 +137,9 @@ def DailyEntry(habitdf,habitdailydf):
         submit = st.form_submit_button()
         if submit:
             st.write('Success!!')
-            habitdailydf.loc[len(habitdailydf)] = finalvals
+            habitdailydf.loc[dt] = finalvals
             habitdailydf.to_pickle('habitdailydf.pkl')
-            habitdailydf.to_csv('habitdailydf.csv')
-
+            
 def GoalDashboard():
     a=1
 
