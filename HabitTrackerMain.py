@@ -1,4 +1,4 @@
-import pandas as pd,numpy as np, seaborn as sns, streamlit as st,os,re, random, datetime
+import pandas as pd,numpy as np, streamlit as st,os,re, random, datetime
 from streamlit import session_state as ss
 from PIL import Image
 st.set_page_config(layout='wide',page_title='Habit & Goal Tracker')#,page_icon='icon.png')
@@ -31,6 +31,7 @@ else:
         cols.extend(['Books','Articles','Food','Spiritual','Hobby','Family','Projects','Miscellenous','Summary'])
         cols.insert(0,'Date')
         habitdailydf = pd.DataFrame(columns=cols)
+        habitdailydf.set_index('Date',inplace=True)
 
 #%% Setup page
 
@@ -93,7 +94,10 @@ def DailyEntry(habitdf,habitdailydf):
         
     with st.form('Enter todays values',clear_on_submit=True):
         c = st.columns(4)
-        currentries = habitdailydf[habitdailydf['Date']==dt]
+        try:
+            currentries = habitdailydf.loc[dt]
+        except:
+            currentries = []
         st.write('**Achievement for the day**')
         c = st.columns(4)
         j=0
@@ -113,16 +117,16 @@ def DailyEntry(habitdf,habitdailydf):
         st.write('---')
         st.write('**Additional comments**')
         c = st.columns(4)
-        finalvals.extend([c[0].text_input('Books read:')])
-        finalvals.extend([c[1].text_input('Articles read:')])
-        finalvals.extend([c[2].text_input('Food:')])
-        finalvals.extend([c[3].text_input('Spiritual activites:')])
-        finalvals.extend([c[0].text_input('Hobby related:')])
-        finalvals.extend([c[1].text_input('Family time:')])
-        finalvals.extend([c[2].text_input('Key Projects')])
-        finalvals.extend([c[3].text_input('Miscellenous')])
+        finalvals.extend([c[0].text_input('Books read:',value=currentries['Books'].iloc[0])])
+        finalvals.extend([c[1].text_input('Articles read:',value=currentries['Articles'].iloc[0])])
+        finalvals.extend([c[2].text_input('Food:',value=currentries[v['Food']].iloc[0])])
+        finalvals.extend([c[3].text_input('Spiritual activites:',value=currentries['Spiritual'].iloc[0])])
+        finalvals.extend([c[0].text_input('Hobby related:',value=currentries['Hobby'].iloc[0])])
+        finalvals.extend([c[1].text_input('Family time:',value=currentries['Family'].iloc[0])])
+        finalvals.extend([c[2].text_input('Key Projects',value=currentries['Projects'].iloc[0])])
+        finalvals.extend([c[3].text_input('Miscellenous',value=currentries['Miscellenous'].iloc[0])])
         st.write('---')
-        finalvals.extend([st.text_input('Summary of the day')])
+        finalvals.extend([st.text_input('Summary of the day',value=currentries['Summary'].iloc[0])])
         st.write('---')
         submit = st.form_submit_button()
         if submit:
