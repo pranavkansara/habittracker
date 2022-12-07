@@ -18,7 +18,7 @@ def DailyEntry(habitdf,habitdailydf):
     with st.form('Enter todays values',clear_on_submit=True):
         c = st.columns(4)
         try:
-            currentries = habitdailydf.loc[dt.strftime('%m/%d/%Y')]
+            currentries = habitdailydf.loc[dt]
             currentries[currentries.isnull()] = ''
         except:
             currentries = []
