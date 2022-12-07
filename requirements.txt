@@ -1,2 +1,5 @@
 pendulum
 plotly
+streamlit-authenticator
+streamlit-option-menu
+matplotlib
