@@ -58,7 +58,7 @@ def Setup(goaldf,goaldisptypes,habitdf,habitdisptypes,habitdailydf):
             submit = st.form_submit_button()
             if submit:
                 finaldf = pd.DataFrame(finalvals,columns=columns)
-                finaldf.to_pickle(exportname)
+                finaldf.to_pickle('./Data/'+exportname)
                 st.write('Success!!')
                 return finaldf
             
@@ -73,4 +73,4 @@ def Setup(goaldf,goaldisptypes,habitdf,habitdisptypes,habitdailydf):
         if sum(habitdf['Weightage'])>100:
             st.write('Sum of weightage exceeds 100%, hence weights will be normalized to sum up to 100% in same ratio.')
             habitdf['Weightage'] = habitdf['Weightage']*100/sum(habitdf['Weightage'])
-            habitdf.to_pickle('habitdf.pkl')
+            habitdf.to_pickle('./Data/habitdf.pkl')
