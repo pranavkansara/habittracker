@@ -10,15 +10,16 @@ from streamlit import session_state as ss
 import ufn_importdata as imp
 
 def DailyEntry(habitdf,habitdailydf):
-    st.write(habitdailydf.tail(5))
+    # st.write(habitdailydf.tail(5))
 
     st.subheader("Daily entries")
-    dt = st.sidebar.date_input("Enter date")
+    dt = st.date_input("Enter date")
         
     with st.form('Enter todays values',clear_on_submit=True):
         c = st.columns(4)
         try:
-            currentries = habitdailydf.loc[dt]
+            currentries = habitdailydf.loc[dt.strftime('%m/%d/%Y')]
+            currentries[currentries.isnull()] = ''
         except:
             currentries = []
         st.write('**Achievement for the day**')
