@@ -48,7 +48,7 @@ def Dashboard(goaldf,goaldisptypes,habitdf,habitdisptypes,habitdailydf):
             habit,freq,unit,target = row
             st.subheader(habit+' ('+freq+' '+str(target)+' '+unit+')')
 
-            dailyhist = habitdailydf[habit].reset_index()
+            dailyhist = habitdailydf[habit].astype(float).reset_index()
             dailyhist['Date']= pd.to_datetime(dailyhist['Date'])
             dailyhist['Startofweek'] = dailyhist['Date'].apply(lambda x: pendulum.date(x.year,x.month,x.day).start_of('week'))
             dailyhist['Month'] = dailyhist['Date'].dt.strftime('%Y-%m')
