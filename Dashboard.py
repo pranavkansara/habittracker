@@ -7,12 +7,25 @@ Created on Wed Nov 23 12:29:40 2022
 import pandas as pd,numpy as np, streamlit as st,os,re, random, datetime, pendulum
 from streamlit import session_state as ss
 import ufn_importdata as imp
+import plotly.graph_objects as go,plotly.express as px, pandas as pd, numpy as np
+from plotly.subplots import make_subplots
+from streamlit_option_menu import option_menu
 
 # st.write(habitdailydf)
 # st.write(habitdf)
 def Dashboard(goaldf,goaldisptypes,habitdf,habitdisptypes,habitdailydf):    
     import pandas as pd
-    subpage = st.selectbox('Select subpage',['Goal tracking','Activity tracking'],index=1)
+    # subpage = st.selectbox('Select subpage',['Goal tracking','Activity tracking'],index=1)
+    subpage = option_menu(None, ["Goal tracking","Activity tracking"], 
+    icons=['house', 'cloud-upload'], 
+    menu_icon="cast", default_index=0, orientation="horizontal",
+    styles={
+        "container": {"padding": "0!important", "background-color": "#fafafa","border-color":"black"},
+        "icon": {"color": "orange", "font-size": "15px"}, 
+        "nav-link": {"font-size": "15px", "text-align": "center", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "navy"},
+    }
+    )
     if subpage == 'Goal tracking':
         a=1
     elif subpage == 'Activity tracking':
@@ -29,9 +42,11 @@ def Dashboard(goaldf,goaldisptypes,habitdf,habitdisptypes,habitdailydf):
         #     c.bar_chart(habitdailydf[habit][:n])
         
         kpi = {}
+        kpisummarypl = st.empty()
+        kpisummarypl1 = st.empty()
         for i,row in habitdf[['Habit','Frequency','Target Unit','Target']].iterrows():
             habit,freq,unit,target = row
-            st.write(habit,'(',freq,target,unit,')')
+            st.subheader(habit+' ('+freq+' '+str(target)+' '+unit+')')
 
             dailyhist = habitdailydf[habit].reset_index()
             dailyhist['Date']= pd.to_datetime(dailyhist['Date'])
@@ -51,8 +66,6 @@ def Dashboard(goaldf,goaldisptypes,habitdf,habitdisptypes,habitdailydf):
             hist.set_index('Date',inplace=True)
             hist['Target'] = target
             
-            import plotly.graph_objects as go,plotly.express as px, pandas as pd, numpy as np
-            from plotly.subplots import make_subplots
             l1 = go.Layout(height=300, width=500,
                 title_text=habit,
                 plot_bgcolor='white',
@@ -72,20 +85,24 @@ def Dashboard(goaldf,goaldisptypes,habitdf,habitdisptypes,habitdailydf):
             fig.add_traces(go.Scatter(y=hist['Target'],x=hist.index))
             fig.layout=l1
 
-            consistency = len(hist[hist['Actual']>=hist['Target']])/len(hist)
-            consistency = str(consistency * 100) + '%'
-            average = np.average(hist['Actual'])
-            achievement = str(round(average*100/target,0))+ ' %'
-            average = str(int(average))+' '+unit
-            kpi[habit] = {'Consistency':consistency,'Average':average,'Achievement':achievement}
-            c1,c2 = st.columns([3,7])
-            # c1.write(hist)
-            # c1.write(kpi[habit])
-            for k,v in kpi[habit].items():
-                c1.metric(k,v)
-            c2.plotly_chart(fig)
-            
-        st.write(pd.DataFrame(kpi).T)
+            hist = hist[hist['Actual']!='']
+            if len(hist)>0:
+                hist['Actual'] = hist['Actual'].astype(float)
+                consistency = len(hist[hist['Actual']>=hist['Target']])/len(hist)
+                consistency = str(consistency * 100) + '%'
+                average = np.average(hist['Actual'])
+                achievement = str(round(average*100/target,0))+ ' %'
+                average = str(int(average))+' '+unit
+                kpi[habit] = {'Consistency':consistency,'Average':average,'Achievement':achievement}
+                c1,c2 = st.columns([3,7])
+                for k,v in kpi[habit].items():
+                    c1.metric(k,v)
+                c2.plotly_chart(fig)
+            else:
+                st.write('Habit not tracked yet. Please record your performance regularly!')
+        
+        kpisummarypl.subheader("Summary of all habits:")
+        kpisummarypl1.write(pd.DataFrame(kpi).T)
     
     
 # https://plotly.com/python/bullet-charts/

@@ -21,19 +21,21 @@ authenticator,config = ufn_Authenticate()
 c1,c2 = st.columns(2)
 
 if ss.authentication_status:
+    st.sidebar.subheader(ss.name)
     c1,c2,c3 = st.columns([5,5,1])
     with c3:
-        authenticator.logout('Logout', 'main')
-    action = option_menu(None, ["Home","Setup", "Daily Entry","Dashboard","Settings"], 
-    icons=['house', 'cloud-upload', "list-task", 'gear'], 
-    menu_icon="cast", default_index=0, orientation="horizontal",
-    styles={
-        "container": {"padding": "0!important", "background-color": "#fafafa","border-color":"black"},
-        "icon": {"color": "orange", "font-size": "15px"}, 
-        "nav-link": {"font-size": "15px", "text-align": "center", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "navy"},
-    }
-    )
+        authenticator.logout('Logout', 'sidebar')
+    with st.sidebar:
+        action = option_menu(None, ["Home","Setup", "Daily Entry","Dashboard","Settings"], 
+        icons=['house', 'cloud-upload', "list-task", 'gear'], 
+        menu_icon="cast", default_index=0, orientation="vertical",
+        styles={
+            "container": {"padding": "0!important", "background-color": "#fafafa","border-color":"black"},
+            "icon": {"color": "orange", "font-size": "15px"}, 
+            "nav-link": {"font-size": "15px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+            "nav-link-selected": {"background-color": "navy"},
+        }
+        )
     goaldf,goaldisptypes,habitdf,habitdisptypes,habitdailydf = imp.DataPrep()
     if action=='Home':
         WriteHomePage(goaldf,habitdf,habitdailydf)
