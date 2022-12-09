@@ -40,7 +40,7 @@ def Dashboard(goaldf,goaldisptypes,habitdf,habitdisptypes,habitdailydf):
         #     c = c1 if (i+1)%2 == 0 else c3
         #     c.subheader(habit)
         #     c.bar_chart(habitdailydf[habit][:n])
-        
+        st.write(habitdailydf)
         kpi = {}
         kpisummarypl = st.empty()
         kpisummarypl1 = st.empty()
